@@ -1,3 +1,4 @@
+// jshint esversion:6
 /*
  * Write a function WITH NO CALLBACKS that,
  * (1) reads a GitHub username from a `readFilePath`
@@ -10,11 +11,14 @@
 
 var fs = require('fs');
 var Promise = require('bluebird');
-
-
+var promiseConstructor = require('./promiseConstructor');
+var promisification = require('./promisification');
 
 var fetchProfileAndWriteToFile = function(readFilePath, writeFilePath) {
   // TODO
+  return promiseConstructor.pluckFirstLineFromFileAsync(readFilePath)
+    .then((username) => promisification.getGitHubProfileAsync(username))
+    .then((body) => fs.writeFileSync(writeFilePath, JSON.stringify(body)));
 };
 
 // Export these functions so we can test them
